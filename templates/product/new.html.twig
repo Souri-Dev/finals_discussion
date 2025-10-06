@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Product
+{% endblock %}
+
+{# {% block body %}
+    <h1>Create new Product</h1>
+
+    {{ include('product/_form.html.twig') }}
+
+    <a href="{{ path('app_product_index') }}">back to list</a>
+{% endblock %} #}
+
+
+{% block body %}
+
+	{{ form_start(form, { 'attr': { 'class': 'fs-form', 'target': '_top', 'novalidate': 'novalidate' } }) }}
+	<div class="fs-field">
+		{{ form_label(form.name, 'Product Name', { 'label_attr': {'class': 'fs-label'} }) }}
+		{{ form_widget(form.name, { 'attr': {'class': 'fs-input', 'placeholder': 'Enter product name'} }) }}
+		{{ form_errors(form.name) }}
+	</div>
+
+	<div class="fs-field">
+		{{ form_label(form.description, 'Description', { 'label_attr': {'class': 'fs-label'} }) }}
+		{{ form_widget(form.description, { 'attr': {'class': 'fs-textarea', 'placeholder': 'Enter product description'} }) }}
+		{{ form_errors(form.description) }}
+	</div>
+
+	<div class="fs-field">
+		{{ form_label(form.price, 'Price', { 'label_attr': {'class': 'fs-label'} }) }}
+		{{ form_widget(form.price, { 'attr': {'class': 'fs-input', 'placeholder': '0.00'} }) }}
+		{{ form_errors(form.price) }}
+	</div>
+
+	<div class="fs-button-group">
+		<button class="fs-button" type="submit">Create Product</button>
+	</div>
+
+
+	{{ form_end(form) }}
+
+{% endblock %}
