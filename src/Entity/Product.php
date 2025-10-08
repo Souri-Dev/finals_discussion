@@ -16,12 +16,7 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Assert\NotBlank(message: "Phone number is required.")]
-    #[Assert\Regex(
-        pattern: "/^(\\+63|09)\\d{10}$/",
-        message: "Phone number must start with +63 or 09 and contain 12 digits total."
-    )]
-
+    #[Assert\NotBlank(message: "Product Name should not be blank.")]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -29,6 +24,9 @@ class Product
 
     #[ORM\Column]
     private ?float $price = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $imageFilename = null;
 
     public function getId(): ?int
     {
@@ -67,6 +65,18 @@ class Product
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(string $imageFilename): static
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }

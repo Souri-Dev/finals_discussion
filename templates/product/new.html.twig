@@ -16,8 +16,8 @@
 
 	{{ form_start(form, { 'attr': { 'class': 'fs-form', 'target': '_top', 'novalidate': 'novalidate' } }) }}
 	<div class="fs-field">
-		{{ form_label(form.name, 'Product Name', { 'label_attr': {'class': 'fs-label'} }) }}
-		{{ form_widget(form.name, { 'attr': {'class': 'fs-input', 'placeholder': 'Enter product name'} }) }}
+		{{ form_label(form.name, 'Phone Number', { 'label_attr': {'class': 'fs-label'} }) }}
+		{{ form_widget(form.name, { 'attr': {'class': 'fs-input', 'placeholder': 'Product Name'} }) }}
 		{{ form_errors(form.name) }}
 	</div>
 
@@ -31,6 +31,12 @@
 		{{ form_label(form.price, 'Price', { 'label_attr': {'class': 'fs-label'} }) }}
 		{{ form_widget(form.price, { 'attr': {'class': 'fs-input', 'placeholder': '0.00'} }) }}
 		{{ form_errors(form.price) }}
+	</div>
+
+	<div class="fs-field">
+		{{ form_label(form.imageFilename, 'Product Image', { 'label_attr': {'class': 'fs-label'} }) }}
+		{{ form_widget(form.imageFilename, { 'attr': {'class': 'fs-input', 'placeholder': 'JPEG/PNG'} }) }}
+		{{ form_errors(form.imageFilename) }}
 	</div>
 
 	<div class="fs-button-group">
