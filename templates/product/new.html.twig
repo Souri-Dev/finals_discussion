@@ -39,6 +39,12 @@
 		{{ form_errors(form.imageFilename) }}
 	</div>
 
+	<div class="fs-field">
+		{{ form_label(form.category, 'Product Category', { 'label_attr': {'class': 'fs-label'} }) }}
+		{{ form_widget(form.category, { 'attr': {'class': 'fs-input', 'placeholder': 'JPEG/PNG'} }) }}
+		{{ form_errors(form.category) }}
+	</div>
+
 	<div class="fs-button-group">
 		<button class="fs-button" type="submit">Create Product</button>
 	</div>

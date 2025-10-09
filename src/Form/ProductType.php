@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Product;
+use Dom\Entity;
 use PHPUnit\TextUI\Configuration\File;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File as FileConstraint;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ProductType extends AbstractType
 {
@@ -41,6 +43,12 @@ class ProductType extends AbstractType
                         'mimeTypesMessage' => 'Please upload a valid image (JPEG or PNG).',
                     ])
                 ],
+            ])
+            ->add('category', EntityType::class, [
+                'class' => 'App\Entity\Category',
+                'choice_label' => 'id',
+                'placeholder' => 'Choose a category',
+                'required' => false,
             ])
         ;
     }
