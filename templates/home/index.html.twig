@@ -1,55 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!
+{% block title %}Welcome
 {% endblock %}
 
 {% block body %}
-
-	<form action="" class="fs-form" target="_top" method="POST">
-		<div class="fs-field">
-			<label class="fs-label" for="customer-name">Customer Name</label>
-			<input class="fs-input" id="customer-name" name="customer-name" placeholder="Enter your full name" required/>
+	<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--color-background);">
+		<div style="background-color: white; padding: 3rem; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); max-width: 600px; width: 100%; text-align: center;">
+			<h1 style="color: var(--color-primary); font-family: var(--font-family-display); font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">
+				Welcome
+				{% if app.user %},
+					{{ app.user.userIdentifier }}
+				{% endif %}!
+			</h1>
+			<p style="color: var(--color-text-muted); font-size: 1.125rem; line-height: 1.75rem; margin-bottom: 2rem;">
+				{% if app.user %}
+					You are successfully logged in. Explore our products and manage your account.
+				{% else %}
+					Please log in to access all features.
+				{% endif %}
+			</p>
+			<div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+				{% if app.user %}
+					<a href="/product" class="fs-button" style="text-decoration: none; display: inline-block;">View Products</a>
+					<a href="{{ path('app_logout') }}" class="fs-button" style="text-decoration: none; display: inline-block; background-color: var(--color-background-alt);">Logout</a>
+				{% else %}
+					<a href="/login" class="fs-button" style="text-decoration: none; display: inline-block;">Login</a>
+					<a href="/register" class="fs-button" style="text-decoration: none; display: inline-block; background-color: var(--color-background-alt);">Register</a>
+				{% endif %}
+			</div>
 		</div>
-		<div class="fs-field">
-			<label class="fs-label" for="customer-phone">Phone Number</label>
-			<input class="fs-input" id="customer-phone" name="customer-phone" placeholder="(XXX) XXX-XXXX" required/>
-		</div>
-		<div class="fs-field">
-			<label class="fs-label" for="customer-email">Email Address</label>
-			<input class="fs-input" id="customer-email" name="customer-email" required/>
-		</div>
-		<div class="fs-field">
-			<label class="fs-label" for="order-date">Order Date</label>
-			<input class="fs-input" id="order-date" name="order-date" placeholder="YYYY-MM-DD" required/>
-		</div>
-		<div class="fs-field">
-			<label class="fs-label" for="delivery-option">
-				Preferred Delivery Option
-			</label>
-			<select class="fs-select" id="delivery-option" name="delivery-option" required>
-				<option value="pick-up">Pick-Up</option>
-				<option value="home-delivery">Home Delivery</option>
-			</select>
-		</div>
-		<div class="fs-field">
-			<label class="fs-label" for="baked-goods-type">Type of Baked Goods</label>
-			<select class="fs-select" id="baked-goods-type" name="baked-goods-type" required>
-				<option value="cakes">Cakes</option>
-				<option value="cookies">Cookies</option>
-				<option value="pies">Pies</option>
-				<option value="bread">Bread</option>
-			</select>
-		</div>
-		<div class="fs-field">hi
-			<label class="fs-label" for="customization-options">
-				Customization Options
-			</label>
-			<textarea class="fs-textarea" id="customization-options" name="customization-options" placeholder="Specify flavors, fillings, sizes, or any other customizations for your order"></textarea>
-		</div>
-		<div class="fs-button-group">
-			<button class="fs-button" type="submit">Submit</button>
-		</div>
-	</form>
+	</div>
 {% endblock %}
 
 

@@ -17,22 +17,7 @@
 		{% endblock %}
 	</head>
 	<body>
-		<nav>
-			{% if is_granted('ROLE_ADMIN') %}
-				<p>This is what you see in Admin Access</p>
-				<a href="/">User Management</a>
-				<a href="/product">Activity Log</a>
-			{% endif %}
 
-			{% if is_granted('ROLE_USER') %}
-				<p>This is what you see in User Access</p>
-
-			{% endif %}
-
-			<a href="/">Home</a>
-			<a href="/product">Products</a>
-
-		</nav>
 		{% block body %}{% endblock %}
 	</body>
 </html>
