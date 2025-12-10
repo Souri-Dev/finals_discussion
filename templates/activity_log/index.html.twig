@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activity Logs
+{% endblock %}
+
+{% block body %}
+	<div style="min-height: 100vh; background-color: var(--color-background); padding: 2rem;">
+		<div style="max-width: 1400px; margin: 0 auto;">
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+				<h1 style="color: var(--color-primary); font-family: var(--font-family-display); font-size: 2.5rem; font-weight: 700;">
+					Activity Logs
+				</h1>
+				<span style="background-color: var(--color-primary); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600;">
+					{{ logs|length }}
+					records
+				</span>
+			</div>
+
+			<!-- Filter Section -->
+			<div style="background-color: white; padding: 1.5rem; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
+				<h3 style="color: var(--color-primary); font-weight: 600; margin-bottom: 1.5rem;">
+					Filter Logs
+				</h3>
+				<form method="get">
+					<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+						<div class="fs-field">
+							<label for="action" class="fs-label">Action</label>
+							<select name="action" id="action" class="fs-input">
+								<option value="">All Actions</option>
+								<option value="User Login" {{ filters.action == 'User Login' ? 'selected' : '' }}>🔓 User Login</option>
+								<option value="User Logout" {{ filters.action == 'User Logout' ? 'selected' : '' }}>🔒 User Logout</option>
+								<option value="User Registration" {{ filters.action == 'User Registration' ? 'selected' : '' }}>✍️ User Registration</option>
+							</select>
+						</div>
+						<div class="fs-field">
+							<label for="role" class="fs-label">Role</label>
+							<select name="role" id="role" class="fs-input">
+								<option value="">All Roles</option>
+								<option value="ROLE_USER" {{ filters.role == 'ROLE_USER' ? 'selected' : '' }}>👤 ROLE_USER</option>
+								<option value="ROLE_ADMIN" {{ filters.role == 'ROLE_ADMIN' ? 'selected' : '' }}>👑 ROLE_ADMIN</option>
+							</select>
+						</div>
+						<div class="fs-field">
+							<label for="date_from" class="fs-label">Date From</label>
+							<input type="date" name="date_from" id="date_from" class="fs-input" value="{{ filters.date_from }}">
+						</div>
+						<div class="fs-field">
+							<label for="date_to" class="fs-label">Date To</label>
+							<input type="date" name="date_to" id="date_to" class="fs-input" value="{{ filters.date_to }}">
+						</div>
+					</div>
+					<div class="fs-button-group" style="display: flex; gap: 1rem;">
+						<button type="submit" class="fs-button">Filter</button>
+						<a href="{{ path('app_activity_logs') }}" class="fs-button" style="text-decoration: none; background-color: var(--color-background-alt);">Clear</a>
+					</div>
+				</form>
+			</div>
+
+			<!-- Table Section -->
+			<div style="background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
+				<div style="overflow-x: auto;">
+					<table style="width: 100%; border-collapse: collapse;">
+						<thead style="background-color: var(--color-primary); color: white;">
+							<tr>
+								<th style="padding: 1rem; text-align: left; font-weight: 600;">User</th>
+								<th style="padding: 1rem; text-align: left; font-weight: 600;">Role</th>
+								<th style="padding: 1rem; text-align: left; font-weight: 600;">Action</th>
+								<th style="padding: 1rem; text-align: left; font-weight: 600;">Target Data</th>
+								<th style="padding: 1rem; text-align: left; font-weight: 600;">IP Address</th>
+								<th style="padding: 1rem; text-align: left; font-weight: 600;">Date & Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for log in logs %}
+								<tr style="border-bottom: 1px solid #e5e7eb; {% if loop.index is odd %}background-color: #f9fafb;{% endif %}">
+									<td style="padding: 1rem;">
+										<strong style="color: var(--color-text);">{{ log.user ? log.user.username : log.username }}</strong>
+									</td>
+									<td style="padding: 1rem;">
+										{% if 'ADMIN' in log.role %}
+											<span style="background-color: #dc3545; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">{{ log.role }}</span>
+										{% else %}
+											<span style="background-color: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">{{ log.role }}</span>
+										{% endif %}
+									</td>
+									<td style="padding: 1rem;">
+										{% if log.action == 'User Login' %}
+											<span style="background-color: var(--color-primary); color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">🔓
+												{{ log.action }}</span>
+										{% elseif log.action == 'User Logout' %}
+											<span style="background-color: #6c757d; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">🔒
+												{{ log.action }}</span>
+										{% elseif log.action == 'User Registration' %}
+											<span style="background-color: #17a2b8; color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">✍️
+												{{ log.action }}</span>
+										{% else %}
+											<span style="background-color: #e5e7eb; color: var(--color-text); padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600;">{{ log.action }}</span>
+										{% endif %}
+									</td>
+									<td style="padding: 1rem;">
+										<small style="color: var(--color-text-muted);">{{ log.targetData ?: '-' }}</small>
+									</td>
+									<td style="padding: 1rem;">
+										<code style="background-color: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.875rem;">{{ log.ipAddress }}</code>
+									</td>
+									<td style="padding: 1rem; white-space: nowrap;">
+										{{ log.createAt|date('Y-m-d H:i:s') }}
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="6" style="padding: 3rem; text-align: center; color: var(--color-text-muted);">
+										<p style="font-size: 1.125rem; margin: 0;">No activity logs found.</p>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

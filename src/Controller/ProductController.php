@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Service\ActivityLogger;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
@@ -24,7 +25,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, ActivityLogger $activityLogger): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
@@ -41,9 +42,13 @@ final class ProductController extends AbstractController
                 $product->setImageFilename($newFilename);
             }
 
-
             $entityManager->persist($product);
             $entityManager->flush();
+
+            $activityLogger->log(
+                'Created Product',
+                'Product ID: .' . $product->getId()
+            );
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -63,7 +68,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager, ActivityLogger $activityLogger): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
@@ -71,6 +76,11 @@ final class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager->flush();
+
+            $activityLogger->log(
+                'Edited Product',
+                'Product ID: .' . $product->getId()
+            );
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
