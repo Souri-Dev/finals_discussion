@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register
+{% endblock %}
 
 {% block body %}
 	<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--color-background);">
@@ -19,6 +20,12 @@
 				{{ form_label(registrationForm.username, 'Username', {'label_attr': {'class': 'fs-label'}}) }}
 				{{ form_widget(registrationForm.username, {'attr': {'class': 'fs-input', 'placeholder': 'Enter your username'}}) }}
 				{{ form_errors(registrationForm.username) }}
+			</div>
+
+			<div class="fs-field">
+				{{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'fs-label'}}) }}
+				{{ form_widget(registrationForm.email, {'attr': {'class': 'fs-input', 'placeholder': 'Enter your email'}}) }}
+				{{ form_errors(registrationForm.email) }}
 			</div>
 
 			<div class="fs-field">
