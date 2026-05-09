@@ -2,50 +2,62 @@ FROM php:8.3-fpm
 
 WORKDIR /app
 
-# Install system deps
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
-    git unzip zip libicu-dev libzip-dev \
+    git \
+    unzip \
+    zip \
+    curl \
+    libicu-dev \
+    libzip-dev \
     && docker-php-ext-install pdo pdo_mysql intl zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Allow Composer plugins (FIX for Symfony Flex error)
+# Configure PHP-FPM to listen on TCP 9000
+RUN sed -i 's|listen = .*|listen = 9000|' /usr/local/etc/php-fpm.d/www.conf
+
+# Allow Composer plugins
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_MEMORY_LIMIT=-1
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
+# Symfony production environment
 ENV APP_ENV=prod
 ENV APP_DEBUG=0
 ENV SYMFONY_DOTENV_VARS=0
 
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy application files
 COPY . .
 
-# Create empty .env file (Symfony Runtime requires it to exist)
+# Ensure .env exists
 RUN touch .env && chmod 644 .env
 
-# Install dependencies (production)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+# Install PHP dependencies
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-scripts
 
-# Nginx config
+# Copy configs
 COPY docker/nginx.conf /etc/nginx/nginx.conf
-
 COPY docker/php.ini /usr/local/etc/php/php.ini
-
-# Supervisor config
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Permissions (important for Symfony)
-RUN mkdir -p var \
-    && chown -R www-data:www-data var
+# Symfony writable directories
+RUN mkdir -p var/cache var/log \
+    && chown -R www-data:www-data var \
+    && chmod -R 775 var
 
-# Copy entrypoint script
+# Copy entrypoint
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 
-# Run entrypoint (cache warmup + supervisord)
+# Start container
 CMD ["/usr/local/bin/entrypoint.sh"]
