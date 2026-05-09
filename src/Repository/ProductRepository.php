@@ -40,4 +40,25 @@ class ProductRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findExpensiveProducts(float $minPrice): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.price > :minPrice')
+            ->setParameter('minPrice', $minPrice)
+            ->orderBy('p.price', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findCheapProducts(float $maxPrice): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.price < :maxPrice')
+            ->setParameter('maxPrice', $maxPrice)
+            ->orderBy('p.price', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 }
