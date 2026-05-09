@@ -37,7 +37,6 @@ RUN touch .env && chmod 644 .env
 
 # Install PHP dependencies
 RUN composer install \
-    --no-dev \
     --optimize-autoloader \
     --no-interaction \
     --no-scripts
