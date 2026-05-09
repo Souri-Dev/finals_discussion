@@ -1,19 +1,17 @@
 <?php
 
-use Symfony\Component\Dotenv\Dotenv;
-
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$dotenv = new Dotenv();
+// ONLY load .env in dev environment
+if (($_SERVER['APP_ENV'] ?? 'prod') !== 'prod') {
+    $dotenv = new Symfony\Component\Dotenv\Dotenv();
+    $envFile = dirname(__DIR__) . '/.env';
 
-$envFile = dirname(__DIR__) . '/.env';
-
-// Only load .env if it exists (local dev only)
-if (file_exists($envFile)) {
-    $dotenv->bootEnv($envFile);
+    if (file_exists($envFile)) {
+        $dotenv->bootEnv($envFile);
+    }
 }
 
-// Safe check for debug mode
-if (($_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? false) === '1') {
+if (($_SERVER['APP_DEBUG'] ?? false) === '1') {
     umask(0000);
 }
