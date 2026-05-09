@@ -31,7 +31,8 @@ COPY docker/php.ini /usr/local/etc/php/php.ini
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Permissions (important for Symfony)
-RUN chown -R www-data:www-data var
+RUN mkdir -p var \
+    && chown -R www-data:www-data var
 
 # Copy entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
