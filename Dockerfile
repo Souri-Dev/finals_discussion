@@ -23,6 +23,9 @@ ENV SYMFONY_DOTENV_VARS=0
 
 COPY . .
 
+# Create empty .env file (Symfony Runtime requires it to exist)
+RUN touch .env && chmod 644 .env
+
 # Install dependencies (production)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
