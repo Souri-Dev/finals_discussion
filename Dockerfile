@@ -6,6 +6,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
+    gettext \
     git \
     unzip \
     zip \
@@ -14,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install pdo pdo_mysql intl zip \
     && rm -rf /var/lib/apt/lists/*
+
 
 # Configure PHP-FPM to listen on TCP 9000
 RUN sed -i 's|listen = .*|listen = 9000|' /usr/local/etc/php-fpm.d/www.conf
@@ -44,7 +46,7 @@ RUN composer install \
     --no-scripts
 
 # Copy configs
-COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx.template.conf /etc/nginx/nginx.template.conf
 COPY docker/php.ini /usr/local/etc/php/php.ini
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
@@ -57,7 +59,7 @@ RUN mkdir -p var/cache var/log \
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 80
+EXPOSE 8080
 
 # Start container
 CMD ["/usr/local/bin/entrypoint.sh"]

@@ -1,9 +1,9 @@
 #!/bin/sh
-# docker-entrypoint.sh
+set -e
 
-# Clear and warmup Symfony cache using real env vars
+envsubst '${PORT}' < /etc/nginx/nginx.template.conf > /etc/nginx/nginx.conf
+
 php bin/console cache:clear --env=prod
 php bin/console cache:warmup --env=prod
 
-# Start supervisord
-exec /usr/bin/supervisord -n
+exec supervisord -c /etc/supervisor/conf.d/supervisord.conf
