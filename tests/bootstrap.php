@@ -2,12 +2,18 @@
 
 use Symfony\Component\Dotenv\Dotenv;
 
-require dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-if (method_exists(Dotenv::class, 'bootEnv')) {
-    (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+$dotenv = new Dotenv();
+
+$envFile = dirname(__DIR__) . '/.env';
+
+// Only load .env if it exists (local dev only)
+if (file_exists($envFile)) {
+    $dotenv->bootEnv($envFile);
 }
 
-if ($_SERVER['APP_DEBUG']) {
+// Safe check for debug mode
+if (($_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? false) === '1') {
     umask(0000);
 }
