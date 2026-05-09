@@ -25,9 +25,6 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_MEMORY_LIMIT=-1
 
 # Symfony production environment
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
-ENV SYMFONY_DOTENV_VARS=0
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
