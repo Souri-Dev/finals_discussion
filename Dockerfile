@@ -20,11 +20,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Install dependencies (production)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Symfony cache warmup
-RUN php bin/console cache:clear --env=prod || true
-RUN php bin/console cache:warmup --env=prod || true
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Nginx config
 COPY docker/nginx.conf /etc/nginx/nginx.conf
@@ -37,6 +33,11 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Permissions (important for Symfony)
 RUN chown -R www-data:www-data var
 
+# Copy entrypoint script
+COPY docker/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-n"]
+# Run entrypoint (cache warmup + supervisord)
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
