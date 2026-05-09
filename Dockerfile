@@ -7,8 +7,12 @@ RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
     git unzip zip libicu-dev libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql intl zip
+    && docker-php-ext-install pdo pdo_mysql intl zip \
+    && rm -rf /var/lib/apt/lists/*
 
+# Allow Composer plugins (FIX for Symfony Flex error)
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_MEMORY_LIMIT=-1
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
