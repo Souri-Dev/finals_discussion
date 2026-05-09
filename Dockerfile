@@ -17,6 +17,10 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+ENV SYMFONY_DOTENV_VARS=0
+
 COPY . .
 
 # Install dependencies (production)

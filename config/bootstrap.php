@@ -1,17 +1,9 @@
 <?php
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+use App\Kernel;
 
-// ONLY load .env in dev environment
-if (($_SERVER['APP_ENV'] ?? 'prod') !== 'prod') {
-    $dotenv = new Symfony\Component\Dotenv\Dotenv();
-    $envFile = dirname(__DIR__) . '/.env';
+require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
-    if (file_exists($envFile)) {
-        $dotenv->bootEnv($envFile);
-    }
-}
-
-if (($_SERVER['APP_DEBUG'] ?? false) === '1') {
-    umask(0000);
-}
+return function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};
