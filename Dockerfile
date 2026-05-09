@@ -40,4 +40,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 EXPOSE 80
 
 # Run entrypoint (cache warmup + supervisord)
-CMD ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["/usr/local/bin/entrypoint.sh"]
